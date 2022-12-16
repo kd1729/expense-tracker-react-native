@@ -1,10 +1,39 @@
-import { View, Text } from "react-native";
+import { View, Text,StyleSheet } from "react-native";
+import { GlobalStyles } from "../../constants/styles";
 
-export default function ExpensesSummary({ expenses }) {
+
+export default function ExpensesSummary({expenses, periodName }) {
+
+  const totalExpenses = expenses.reduce((total, expense) => {
+    return total + expense.amount;
+  }, 0);
+
   return (
-    <View>
-      <Text>112</Text>
-      <Text>143</Text>
+    <View style={styles.container}>
+      <Text style={styles.period}>{periodName}</Text>
+      <Text style={styles.sum}>${totalExpenses.toFixed(2)}</Text>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 8,
+    backgroundColor: GlobalStyles.colors.primary50, 
+    borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  period: {
+    fontSize: 12,
+    color: GlobalStyles.colors.primary400,
+  },
+  sum: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: GlobalStyles.colors.primary500,
+  }
+});
+
+
