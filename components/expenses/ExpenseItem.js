@@ -9,7 +9,9 @@ export default function ExpenseItem({ expense, onPress }) {
   const navigation = useNavigation();
 
   function expenseHandler() {
-    navigation.navigate("Manage Expense", { expense });
+    navigation.navigate("Manage Expense", { 
+      expenseId: expense.id,
+    });
   }
 
   return (
