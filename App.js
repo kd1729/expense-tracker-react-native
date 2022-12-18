@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 
 import { GlobalStyles } from "./constants/styles";
-
+import ExpensesContextProvider from "./store/expenses-context";
 import RecentExpenses from "./screens/RecentExpenses";
 import ManageExpense from "./screens/ManageExpense";
 import AllExpenses from "./screens/AllExpenses";
@@ -27,7 +27,7 @@ function ExpensesOverview() {
             icon="add"
             size={24}
             color={tintColor}
-            onPress={() => navigation.navigate("Manage Expense")} 
+            onPress={() => navigation.navigate("Manage Expense")}
           />
         ),
       })}
@@ -61,26 +61,31 @@ function ExpensesOverview() {
 export default function App() {
   return (
     <>
-      <StatusBar style="auto" />
-      <NavigationContainer>
-        <Stacks.Navigator initialRouteName="Expenses Overview" 
-          screenOptions={{
-            headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-            headerTintColor: "white",
-          }}
-        >
-          <Stacks.Screen
-            name="Expenses Overview"
-            component={ExpensesOverview}
-            options={{ headerShown: false }}
-          />
-          <Stacks.Screen name="Manage Expense" component={ManageExpense} 
-            options={{
-              presentation: "modal",
+      <StatusBar style="light" />
+      <ExpensesContextProvider>
+        <NavigationContainer>
+          <Stacks.Navigator
+            initialRouteName="Expenses Overview"
+            screenOptions={{
+              headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+              headerTintColor: "white",
             }}
-          />
-        </Stacks.Navigator>
-      </NavigationContainer>
+          >
+            <Stacks.Screen
+              name="Expenses Overview"
+              component={ExpensesOverview}
+              options={{ headerShown: false }}
+            />
+            <Stacks.Screen
+              name="Manage Expense"
+              component={ManageExpense}
+              options={{
+                presentation: "modal",
+              }}
+            />
+          </Stacks.Navigator>
+        </NavigationContainer>
+      </ExpensesContextProvider>
     </>
   );
 }

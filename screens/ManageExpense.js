@@ -1,12 +1,15 @@
 import { StyleSheet, View } from "react-native";
-import { useLayoutEffect } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { useContext, useLayoutEffect } from "react";
 
 import IconButton from "../components/ui/IconButton";
 import { GlobalStyles } from "../constants/styles";
 import Button from "../components/ui/Button";
+import { ExpensesContext } from "../store/expenses-context";
 
 export default function ManageExpense({ route, navigation }) {
+  const { expenses, addExpense, updateExpense, deleteExpense } =
+    useContext(ExpensesContext);
+
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
@@ -17,15 +20,30 @@ export default function ManageExpense({ route, navigation }) {
   }, [navigation, isEditing]);
 
   function deleteExpenseHandler() {
-    navigation.navigate("All Expenses");
+    deleteExpense(editedExpenseId);
+    navigation.goBack();
   }
 
   function cancelHandler() {
-    navigation.navigate("All Expenses");
+    navigation.goBack();
   }
 
   function confirmHandler() {
-    navigation.navigate("All Expenses");
+    if (isEditing) {
+      updateExpense(editedExpenseId, {
+        title: "Updated Expense " + Math.random().toFixed(2).toString(),
+        amount: Math.random() * 100,
+        date: new Date(),
+      });
+    } else {
+      addExpense({
+        id: Math.random().toString(),
+        title: "New Expense " + Math.random().toFixed(2).toString(),
+        amount: Math.random() * 100,
+        date: new Date(),
+      });
+    }
+    navigation.goBack();
   }
 
   return (
@@ -60,15 +78,15 @@ const styles = StyleSheet.create({
     padding: 24,
     backgroundColor: GlobalStyles.colors.primary800,
   },
-  buttonsContainer:{
+  buttonsContainer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },    
-   button:{
+  },
+  button: {
     minWidth: 120,
     marginHorizontal: 8,
-   },   
+  },
   deleteContainer: {
     marginTop: 16,
     paddingTop: 8,
