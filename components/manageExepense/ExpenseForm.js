@@ -1,38 +1,63 @@
-import { View, Button, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
+import { useState } from "react";
 
 import Input from "./Input";
+import Button from "../ui/Button";
 
-export default function ExpenseForm() {
-  function amountChangedHandler(text) {
-    console.log(text);
+export default function ExpenseForm({submitButtonLabel, onCancel, onSubmit}) {
+  const [inputValues, setInputValues] = useState({
+    amount: "",
+    date: "",
+    title: "",
+  });
+
+  function inputChangedHandler(inputName, inputValue) {
+    setInputValues((prevState) => {
+      return {
+        ...prevState,
+        [inputName]: inputValue,
+      };
+    });
   }
 
-  function dateChangedHandler(text) {
-    console.log(text);
+  function submitHandler() {
+    const expenseData = {
+        amount: +inputValues.amount,
+        date: new Date(inputValues.date),
+        title: inputValues.title,
+    }
+
+    onSubmit(expenseData);
   }
 
   return (
-    <View>
-      <Input
-        label="Amount"
-        textInputConfig={{
-          placeholder: "Enter amount",
-          keyboardType: "decimal-pad",
-          maxLength: 10,
-          onChangeText: amountChangedHandler,
-        }}
-      />
+    <View style={styles.form}>
+      <Text style={styles.title}>Your Expense</Text>
+      <View style={styles.inputsRow}>
+        <Input
+          label="Amount"
+          style={styles.rowInput}
+          textInputConfig={{
+            placeholder: "Enter amount",
+            keyboardType: "decimal-pad",
+            maxLength: 10,
+            onChangeText: inputChangedHandler.bind(this, "amount"),
+            value: inputValues.amount,
+          }}
+        />
 
-      <Input
-        label="Date"
-        textInputConfig={{
-          placeholder: "Enter date (YYYY-MM-DD)",
-          keyboardType: "default",
-          maxLength: 10,
-          onChangeText: dateChangedHandler,
-        }}
-      />
-
+        <Input
+          label="Date"
+          style={styles.rowInput}
+          textInputConfig={{
+            placeholder: "Enter date (YYYY-MM-DD)",
+            keyboardType: "default",
+            maxLength: 10,
+            onChangeText: inputChangedHandler.bind(this, "date"),
+            value: inputValues.date,
+          }}
+        />
+      </View>
       <Input
         label="Title"
         textInputConfig={{
@@ -41,9 +66,51 @@ export default function ExpenseForm() {
           keyboardType: "default",
           multiline: true,
           autoCapitalize: "sentences",
+          onChangeText: inputChangedHandler.bind(this, "title"),
+          value: inputValues.title,
         }}
       />
 
+      <View style={styles.buttonsContainer}>
+        <Button style={styles.button} mode="flat" onPress={onCancel}>
+          Cancel
+        </Button>
+
+        <Button style={styles.button} onPress={submitHandler}>
+          {submitButtonLabel}
+        </Button>
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  form: {
+    marginTop: 80,
+    marginBottom: 24,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "white",
+    marginVertical: 24,
+    textAlign: "center",
+  },
+  inputsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  rowInput: {
+    flex: 1,
+    paddingHorizontal: 8,
+  },
+  buttonsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    minWidth: 120,
+    marginHorizontal: 8,
+  },
+});
