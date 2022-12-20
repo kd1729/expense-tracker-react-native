@@ -41,6 +41,7 @@ export default function ManageExpense({ route, navigation }) {
     <View style={styles.container}>
       <ExpenseForm
         submitButtonLabel={isEditing ? "Update" : "Add"}
+        expenseData={expenses.find((expense) => expense.id === editedExpenseId)}
         onSubmit={confirmHandler}
         onCancel={cancelHandler}
       />
