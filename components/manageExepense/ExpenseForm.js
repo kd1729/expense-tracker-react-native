@@ -41,6 +41,21 @@ export default function ExpenseForm({
       title: inputValues.title,
     };
 
+    const isAmountValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
+    const isDateValid = expenseData.date.toDateString() !== "Invalid Date";
+    const isTitleValid = expenseData.title.trim().length > 0;
+    const isDataValid = isAmountValid && isDateValid && isTitleValid;
+
+    if (!isDataValid) {
+      if (!isAmountValid) {
+        alert("Please enter a valid amount");
+      } else if (!isDateValid) {
+        alert("Please enter a valid date");
+      } else if (!isTitleValid) {
+        alert("Please enter a valid title");
+      }
+      return;
+    }
     onSubmit(expenseData);
   }
 
