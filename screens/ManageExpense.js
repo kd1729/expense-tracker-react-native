@@ -3,8 +3,9 @@ import { useContext, useLayoutEffect } from "react";
 
 import IconButton from "../components/ui/IconButton";
 import { GlobalStyles } from "../constants/styles";
-  import { ExpensesContext } from "../store/expenses-context";
+import { ExpensesContext } from "../store/expenses-context";
 import ExpenseForm from "../components/manageExepense/ExpenseForm";
+import { StoreExpense, UpdateExpense, DeleteExpense } from "../utils/http";
 
 export default function ManageExpense({ route, navigation }) {
   const { expenses, addExpense, updateExpense, deleteExpense } =
@@ -19,7 +20,8 @@ export default function ManageExpense({ route, navigation }) {
     });
   }, [navigation, isEditing]);
 
-  function deleteExpenseHandler() {
+  async function deleteExpenseHandler() {
+    await DeleteExpense(editedExpenseId);
     deleteExpense(editedExpenseId);
     navigation.goBack();
   }
@@ -28,11 +30,13 @@ export default function ManageExpense({ route, navigation }) {
     navigation.goBack();
   }
 
-  function confirmHandler(expenseData) {
+  async function confirmHandler(expenseData) {
     if (isEditing) {
       updateExpense(editedExpenseId, expenseData);
+      await UpdateExpense(editedExpenseId, expenseData);
     } else {
-      addExpense(expenseData);
+      const id = StoreExpense(expenseData);
+      addExpense({ ...expenseData, id: id });
     }
     navigation.goBack();
   }
