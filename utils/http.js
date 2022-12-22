@@ -4,7 +4,7 @@ const baseURL =
   "https://expense-tracker-react-na-607ff-default-rtdb.firebaseio.com";
 
 export async function StoreExpense(expenseData) {
-  await axios.post(`${baseURL}/expenses.json`, expenseData);
+  const response = await axios.post(`${baseURL}/expenses.json`, expenseData);
   const id = response.data.name;
   return id;
 }
