@@ -7,9 +7,11 @@ import { ExpensesContext } from "../store/expenses-context";
 import ExpenseForm from "../components/manageExepense/ExpenseForm";
 import { StoreExpense, UpdateExpense, DeleteExpense } from "../utils/http";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import ErrorOverlay from "../components/ui/ErrorOverlay";
 
 export default function ManageExpense({ route, navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const { expenses, addExpense, updateExpense, deleteExpense } =
     useContext(ExpensesContext);
@@ -25,9 +27,14 @@ export default function ManageExpense({ route, navigation }) {
 
   async function deleteExpenseHandler() {
     setIsLoading(true);
-    await DeleteExpense(editedExpenseId);
-    deleteExpense(editedExpenseId);
-    navigation.goBack();
+    try {
+      await DeleteExpense(editedExpenseId);
+      deleteExpense(editedExpenseId);
+      navigation.goBack();
+    } catch (error) {
+      setError("Could not delete expense!");
+      setIsLoading(false);
+    }
   }
 
   function cancelHandler() {
@@ -36,14 +43,23 @@ export default function ManageExpense({ route, navigation }) {
 
   async function confirmHandler(expenseData) {
     setIsLoading(true);
-    if (isEditing) {
-      updateExpense(editedExpenseId, expenseData);
-      await UpdateExpense(editedExpenseId, expenseData);
-    } else {
-      const id = StoreExpense(expenseData);
-      addExpense({ ...expenseData, id: id });
+    try {
+      if (isEditing) {
+        updateExpense(editedExpenseId, expenseData);
+        await UpdateExpense(editedExpenseId, expenseData);
+      } else {
+        const id = StoreExpense(expenseData);
+        addExpense({ ...expenseData, id: id });
+      }
+      navigation.goBack();
+    } catch (error) {
+      setError("Could not save expense!");
+      setIsLoading(false);
     }
-    navigation.goBack();
+  }
+
+  if (error && !isLoading) {
+    return <ErrorOverlay message={error} />;
   }
 
   if (isLoading) {
