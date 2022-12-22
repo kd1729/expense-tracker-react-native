@@ -20,8 +20,8 @@ export default function RecentExpenses() {
       setExpenses(expenses);
       } catch (error) {
         setError("Could not fetch expenses");
-        setIsLoading(false);
       }
+      setIsLoading(false);
     }
     getExpenses();
   }, []);
