@@ -11,7 +11,7 @@ export default function ExpensesSummary({expenses, periodName }) {
   return (
     <View style={styles.container}>
       <Text style={styles.period}>{periodName}</Text>
-      <Text style={styles.sum}>${totalExpenses.toFixed(2)}</Text>
+      <Text style={styles.sum}>₹{totalExpenses.toFixed(2)}</Text>
     </View>
   );
 }
