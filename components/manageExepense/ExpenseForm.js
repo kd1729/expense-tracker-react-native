@@ -80,7 +80,7 @@ export default function ExpenseForm({
           style={styles.rowInput}
           textInputConfig={{
             placeholder: "Enter date (YYYY-MM-DD)",
-            keyboardType: "default",
+            keyboardType: "number-pad",
             maxLength: 10,
             onChangeText: inputChangedHandler.bind(this, "date"),
             value: inputValues.date,

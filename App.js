@@ -21,7 +21,7 @@ function ExpensesOverview() {
         headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
         headerTintColor: "white",
         tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-        tabBarActiveTintColor: "GloablStyles.colors.accent500",
+        tabBarActiveTintColor: GlobalStyles.colors.accent500,
         headerRight: ({ tintColor }) => (
           <IconButton
             icon="add"
@@ -36,7 +36,7 @@ function ExpensesOverview() {
         name="Recent Expenses"
         component={RecentExpenses}
         options={{
-          tile: "Recent Expenses",
+          title: "Recent Expenses",
           tabBarLabel: "Recent",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="hourglass" color={color} size={size} />
@@ -47,7 +47,7 @@ function ExpensesOverview() {
         name="All Expenses"
         component={AllExpenses}
         options={{
-          tile: "All Expenses",
+          title: "All Expenses",
           tabBarLabel: "All",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar" color={color} size={size} />
